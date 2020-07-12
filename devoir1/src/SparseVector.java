@@ -4,7 +4,7 @@
 
 public class SparseVector {
 
-    private int length = 0;
+    private int length;
     private int size = 0;
     private Node head;
 
