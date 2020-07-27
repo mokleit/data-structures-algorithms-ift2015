@@ -1,5 +1,6 @@
 /**
- * @author Kleit Mo
+ * @author Kleit Mo - 1061121
+ * https://github.com/mokleit/ift2015
  */
 
 import java.io.BufferedReader;
@@ -94,11 +95,11 @@ class HuffmanCode {
         return huffmanTree.poll();
     }
 
+    //Traverse the tree using DFS and inorder traversal
     /**
      * @param node Nœud actuel
      * @param code Code Huffman
      */
-    //Traverse the tree using DFS and inorder traversal
     private static void printTable(Node node, String code) {
         if(node == null)
             return;
@@ -109,6 +110,7 @@ class HuffmanCode {
         printTable(node.right, code + "1");
     }
 
+    //Traverse the tree using BFS and print out graph in dot format
     /**
      * @param node Nœud de départ
      */
