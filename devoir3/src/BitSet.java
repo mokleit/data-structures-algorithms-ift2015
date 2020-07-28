@@ -1,5 +1,5 @@
 /**
- * @author Mo Kleit - 1061121
+ * @author Mo Kleit
  */
 public class BitSet {
     private int[] bitSet;
@@ -51,6 +51,11 @@ public class BitSet {
         this.bitSet[arrayIndex] |= (1 << bitIndex);
     }
 
+    /**
+     * Check if bit to access is out of bounds.
+     *
+     * @param bitIndex
+     */
     private void checkIndexOutOfBounds(int bitIndex) {
         if(bitIndex < 0 || bitIndex >= this.totalBitsNumber) {
             throw new RuntimeException("Bit index is out of bounds. Indexes go from 0 to " + (this.totalBitsNumber-1));
@@ -92,7 +97,7 @@ public class BitSet {
     }
 
     /**
-     * Return number of true elements.
+     * Count number of bits set.
      */
     public int countBitsSet() {
         int count=0;
