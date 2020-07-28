@@ -2,11 +2,9 @@
  * @author Mo Kleit
  */
 public class BitSet {
-    private int[] bitSet;
-    private int totalBitsNumber;
+    private final int[] bitSet;
+    private final int totalBitsNumber;
     private static final int ADDRESS_BITS_PER_ARRAY_INDEX = 5;
-    //Each index has 1*2^5=32 bits
-    private static final int BITS_PER_ARRAY_INDEX = 1 << ADDRESS_BITS_PER_ARRAY_INDEX;
 
     /**
      * Crée un ensemble de bits, d'une certaine taille. Ils sont initialisés à
