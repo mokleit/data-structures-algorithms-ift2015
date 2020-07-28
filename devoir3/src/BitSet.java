@@ -1,10 +1,12 @@
-import java.util.Arrays;
-
 /**
  * @author Mo Kleit - 1061121
  */
 public class BitSet {
     private int[] bitSet;
+    private int totalBitsNumber;
+    private static final int ADDRESS_BITS_PER_ARRAY_INDEX = 5;
+    //Each index has 1*2^5=32 bits
+    private static final int BITS_PER_ARRAY_INDEX = 1 << ADDRESS_BITS_PER_ARRAY_INDEX;
 
     /**
      * Crée un ensemble de bits, d'une certaine taille. Ils sont initialisés à
@@ -16,7 +18,14 @@ public class BitSet {
         if(nbits < 0){
             throw new RuntimeException("BitSet can't be of negative size.");
         }
-        bitSet = new int[nbits];
+        this.totalBitsNumber = nbits;
+        bitSet = new int[findRequiredNumberOfIndexes(nbits)];
+    }
+
+    private int findRequiredNumberOfIndexes(final int nbits) {
+        //Decrease number of bits by 1 to handle case where nbits is a multiple of BITS_PER_ARRAY_INDEX
+        int indexes = (nbits-1) >> ADDRESS_BITS_PER_ARRAY_INDEX;
+        return indexes + 1;
     }
 
     /**
@@ -27,7 +36,8 @@ public class BitSet {
      */
     public boolean get(int bitIndex) {
         checkIndexOutOfBounds(bitIndex);
-        return bitSet[bitIndex] == 1;
+        int arrayIndex = bitIndex >> ADDRESS_BITS_PER_ARRAY_INDEX;
+        return (this.bitSet[arrayIndex] & (1 << bitIndex)) != 0;
     }
 
     /**
@@ -37,12 +47,13 @@ public class BitSet {
      */
     public void set(int bitIndex) {
         checkIndexOutOfBounds(bitIndex);
-        bitSet[bitIndex] = 1;
+        int arrayIndex = bitIndex >> ADDRESS_BITS_PER_ARRAY_INDEX;
+        this.bitSet[arrayIndex] |= (1 << bitIndex);
     }
 
     private void checkIndexOutOfBounds(int bitIndex) {
-        if(bitIndex < 0 || bitIndex >= this.bitSet.length) {
-            throw new RuntimeException("Bit index is out of bounds. Indexes go from 0 to " + (this.bitSet.length-1));
+        if(bitIndex < 0 || bitIndex >= this.totalBitsNumber) {
+            throw new RuntimeException("Bit index is out of bounds. Indexes go from 0 to " + (this.totalBitsNumber-1));
         }
     }
 
@@ -52,13 +63,22 @@ public class BitSet {
      * @param bitIndex l'index du bit
      */
     public void clear(int bitIndex) {
-        bitSet[bitIndex] = 0;
+        checkIndexOutOfBounds(bitIndex);
+        int arrayIndex = bitIndex >> ADDRESS_BITS_PER_ARRAY_INDEX;
+        this.bitSet[arrayIndex] &= ~(1 << bitIndex);
     }
 
     /**
-     * Return size of BitSet.
+     * Return number of bits accessible for use in the BitSet.
      */
     public int size() {
+        return this.totalBitsNumber;
+    }
+
+    /**
+     * Return length of the array holding the bits or equivalently, the number of accessible indexes.
+     */
+    public int length() {
         return this.bitSet.length;
     }
 
@@ -66,7 +86,9 @@ public class BitSet {
      * Clear entire bitset.
      */
     public void clear(){
-        this.bitSet = new int[this.bitSet.length];
+        for(int i = 0; i < this.bitSet.length; i++) {
+            this.bitSet[i] = 0;
+        }
     }
 
     /**
@@ -74,8 +96,10 @@ public class BitSet {
      */
     public int countBitsSet() {
         int count=0;
-        for(int i = 0; i < this.size(); i++) {
-            if(bitSet[i] == 1) {
+        for(int i = 0; i < this.length(); i++) {
+            int j = this.bitSet[i];
+            while(j != 0) {
+                j = j & (j-1);
                 count++;
             }
         }
