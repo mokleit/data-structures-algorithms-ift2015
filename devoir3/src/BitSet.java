@@ -13,8 +13,8 @@ public class BitSet {
      * @param nbits taille initiale de l'ensemble
      */
     public BitSet(int nbits) {
-        if(nbits < 0){
-            throw new RuntimeException("BitSet can't be of negative size.");
+        if(nbits <= 0){
+            throw new RuntimeException("BitSet needs to have size greater than 0.");
         }
         this.totalBitsNumber = nbits;
         bitSet = new int[findRequiredNumberOfIndexes(nbits)];

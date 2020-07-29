@@ -4,6 +4,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class BloomFilterTest {
 
     @Test
+    void willFailToCreateBloomFilterWith0Bits() {
+        assertThrows(RuntimeException.class, ()-> {new BloomFilter(0, 2);});
+    }
+
+    @Test
+    void willFailToCreateBloomFilterWithNegativeSize() {
+        assertThrows(RuntimeException.class, ()-> {new BloomFilter(-1, 2);});
+    }
+
+    @Test
     void willSuccessfullyCreateBloomFilterOfSpecificSize() {
         final BloomFilter bloomFilter = new BloomFilter(575, 10);
         assertEquals(575, bloomFilter.size());
@@ -56,17 +66,17 @@ class BloomFilterTest {
     }
 
     @Test
-    void willReturnNumberOfInsertedElements() {
+    void willSuccessfullyComputeProbabilityOfFalsePositives() {
         final BloomFilter bloomFilter = new BloomFilter(50, 2);
-        final byte[] word1 = "macguire".getBytes();
-        final byte[] word2 = "pogba".getBytes();
-        final byte[] word3 = "fernandes".getBytes();
-        final byte[] word4 = "rashford".getBytes();
+        final byte[] word1 = "azpilicueta".getBytes();
+        final byte[] word2 = "pulisic".getBytes();
+        final byte[] word3 = "kovaci".getBytes();
+        final byte[] word4 = "kante".getBytes();
         bloomFilter.add(word1);
         bloomFilter.add(word2);
         bloomFilter.add(word3);
         bloomFilter.add(word4);
-        assertEquals(4, bloomFilter.count());
-    }
+        assertEquals(23, (int) Math.ceil(bloomFilter.fpp() * 1000));
 
+    }
 }
