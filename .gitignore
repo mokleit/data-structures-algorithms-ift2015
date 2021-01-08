@@ -3,6 +3,6 @@
 *.xml
 idea
 /out
-devoir1/out
-devoir2/out
+LinkedList/out
+Huffman Code/out
 .DS_Store
